@@ -301,8 +301,16 @@ hub-buy,hub-sell`;
   /* ─────────────────────────────────────────────
      PARSE
   ───────────────────────────────────────────── */
-  const nodes = d3.csvParse(nodes_csv);
+  const allRows = d3.csvParse(nodes_csv);
+  // Extract meta rows before rendering
+  const metaTitle = allRows.find(d => d.id === "meta-title");
+  const nodes = allRows.filter(d => d.type !== "meta");
   const links = d3.csvParse(links_csv);
+
+  // Apply dynamic title if present in sheet
+  if (metaTitle && metaTitle.label) {
+    document.getElementById("title").textContent = metaTitle.label.toUpperCase();
+  }
 
   // Assign colors to groups
   const groups   = [...new Set(nodes.map(d => d.group))];
