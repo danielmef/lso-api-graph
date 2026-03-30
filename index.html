@@ -193,28 +193,28 @@
   } catch(e) {
     console.warn("Could not fetch nodes from Google Sheets:", e);
     // Fallback to last known data
-    nodes_csv = `id,label,type,group,importance,url,region
-hub-buy,Buy Side,hub,buy,,,
-hub-sell,Sell Side,hub,sell,,,
-amartus-buy,Amartus,company,buy,medium,www.amartus.com,Worldwide
-amartus-sell,Amartus,company,sell,medium,www.amartus.com,Worldwide
-att-buy,AT&T,company,buy,high,www.att.com,Worldwide
-cmc-buy,CMC Networks,company,buy,medium,www.cmcnetworks.com,South Africa
-colt-sell,Colt,company,sell,high,,
-cox-buy,Cox,company,buy,medium,,
-cox-sell,Cox,company,sell,medium,,
-dcconnect-buy,DCConnect,company,buy,low,,
-dcconnect-sell,DCConnect,company,sell,low,,
-dt-sell,Deutsche Telekom,company,sell,high,,
-enxoo-buy,Enxoo,company,buy,low,,
-enxoo-sell,Enxoo,company,sell,low,,
-eunetworks-sell,euNetworks,company,sell,low,,
-frontier-sell,Frontier,company,sell,medium,,
-orange-buy,Orange,company,buy,high,,
-orange-sell,Orange,company,sell,high,,
-sparkle-sell,Sparkle,company,sell,high,,
-transunion-buy,Transunion,company,buy,low,,
-transunion-sell,Transunion,company,sell,low,,`;
+    nodes_csv = `id,label,type,group,importance,url,region,glf,solution provider
+hub-buy,Buy side,hub,buy,,,,,
+hub-sell,Sell side,hub,sell,,,,,
+amartus-buy,Amartus,company,buy,medium,www.amartus.com,Worldwide,,yes
+amartus-sell,Amartus,company,sell,medium,www.amartus.com,Worldwide,,yes
+att-buy,AT&T,company,buy,high,www.att.com,Worldwide,yes,
+cmc-buy,CMC Networks,company,buy,medium,www.cmcnetworks.com,South Africa,,
+colt-sell,Colt,company,sell,high,www.colt.net,Europe,yes,
+cox-buy,Cox,company,buy,medium,www.cox.com,USA,,
+cox-sell,Cox,company,sell,medium,www.cox.com,USA,,
+dcconnect-buy,DCConnect,company,buy,low,,,,
+dcconnect-sell,DCConnect,company,sell,low,,,,
+dt-sell,Deutsche Telekom,company,sell,high,,,yes,
+enxoo-buy,Enxoo,company,buy,low,,,,
+enxoo-sell,Enxoo,company,sell,low,,,,
+eunetworks-sell,euNetworks,company,sell,low,,,yes,
+frontier-sell,Frontier,company,sell,medium,,,,
+orange-buy,Orange,company,buy,high,www.orange.com,,yes,
+orange-sell,Orange,company,sell,high,www.orange.com,,yes,
+sparkle-sell,Sparkle,company,sell,high,,,yes,
+transunion-buy,Transunion,company,buy,low,,,,yes
+transunion-sell,Transunion,company,sell,low,,,,yes`;
   }
 
   // Links fetched live from Google Sheets
@@ -668,6 +668,36 @@ hub-buy,hub-sell`;
         .attr("letter-spacing", "0.8px")
         .attr("pointer-events", "none")
         .text("GLF");
+    });
+
+  // Solution Provider badge — top-left corner overlaps circle
+  nodeSel.filter(d => d.type === "company" && d["solution provider"] && d["solution provider"].toLowerCase() === "yes")
+    .each(function(d) {
+      const grp = d3.select(this);
+      const r   = radius(d);
+      const bw  = 50, bh = 28;
+      // Top-left corner of badge overlaps circle (bottom-right area of badge anchor)
+      const trx = -r * 0.62 - bw, bty = -r * 0.62;
+      // Badge background
+      grp.append("rect")
+        .attr("x", trx).attr("y", bty)
+        .attr("width", bw).attr("height", bh)
+        .attr("rx", 4).attr("ry", 4)
+        .attr("fill", "#1a1a2e")
+        .attr("stroke", col(d).light)
+        .attr("stroke-width", 2);
+      // Badge label
+      grp.append("text")
+        .attr("x", trx + bw / 2).attr("y", bty + bh / 2)
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "central")
+        .attr("fill", col(d).light)
+        .attr("font-size", "24px")
+        .attr("font-weight", 700)
+        .attr("font-family", "'Barlow Condensed', sans-serif")
+        .attr("letter-spacing", "0.8px")
+        .attr("pointer-events", "none")
+        .text("Solution Provider");
     });
 
   // Staggered fade-in
