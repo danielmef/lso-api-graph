@@ -122,6 +122,14 @@
       opacity: 0; animation: slideUp .7s ease 1s forwards;
     }
 
+    /* Debug bar */
+    #debug-bar {
+      position: fixed; bottom: 6px; left: 50%; transform: translateX(-50%);
+      font-size: 10px; color: rgba(255,255,255,0.35);
+      font-family: monospace; z-index: 10;
+      opacity: 0; pointer-events: none;
+    }
+
     /* Graph */
     #graph {
       position: fixed; inset: 0;
@@ -168,6 +176,7 @@
   <div id="logo">
     <img src="https://www.mplify.net/wp-content/themes/base/images/logo.svg" alt="Mplify Alliance" />
   </div>
+  <div id="debug-bar"></div>
   <svg id="graph"></svg>
   <div id="tooltip">
     <div class="tip-name"></div>
@@ -195,13 +204,19 @@
   const NODES_URL  = BASE_URL + "&gid=" + nodesGid;
   const LINKS_URL  = BASE_URL + "&gid=" + linksGid;
 
+  // Debug bar — shows active GIDs and data source
+  const debugBar = document.getElementById("debug-bar");
+  debugBar.textContent = `nodes gid: ${nodesGid}  |  links gid: ${linksGid}`;
+  debugBar.style.opacity = "1";
+
   // Nodes fetched live from Google Sheets
-  let nodes_csv;
+  let nodes_csv, nodes_source = "live";
   try {
     const resp = await fetch(NODES_URL + "&t=" + Date.now());
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     nodes_csv = await resp.text();
   } catch(e) {
+    nodes_source = "fallback";
     console.warn("Could not fetch nodes from Google Sheets:", e);
     // Fallback to last known data
     nodes_csv = `id,label,type,group,importance,url,region,glf,solution provider
@@ -229,12 +244,13 @@ transunion-sell,Transunion,company,sell,low,,,,yes`;
   }
 
   // Links fetched live from Google Sheets
-  let links_csv;
+  let links_csv, links_source = "live";
   try {
     const resp = await fetch(LINKS_URL + "&t=" + Date.now());
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     links_csv = await resp.text();
   } catch(e) {
+    links_source = "fallback";
     console.warn("Could not fetch links from Google Sheets:", e);
     // Fallback to last known data
     links_csv = `source,target
@@ -259,6 +275,9 @@ transunion-buy,hub-buy
 transunion-sell,hub-sell
 hub-buy,hub-sell`;
   }
+
+  // Update debug bar with source info
+  debugBar.textContent = `nodes gid: ${nodesGid} [${nodes_source}]  |  links gid: ${linksGid} [${links_source}]`;
 
   /* ─────────────────────────────────────────────
      COLOR PALETTE
