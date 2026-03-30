@@ -646,22 +646,22 @@ hub-buy,hub-sell`;
       const grp = d3.select(this);
       const r   = radius(d);
       const bx  = r * 0.72, by = -r * 0.72;
-      const bw  = 26, bh = 14;
+      const bw  = 78, bh = 42;
       // Badge background
       grp.append("rect")
         .attr("x", bx - bw / 2).attr("y", by - bh / 2)
         .attr("width", bw).attr("height", bh)
-        .attr("rx", 3).attr("ry", 3)
+        .attr("rx", 6).attr("ry", 6)
         .attr("fill", "#1a1a2e")
         .attr("stroke", col(d).light)
-        .attr("stroke-width", 1);
+        .attr("stroke-width", 2);
       // Badge label
       grp.append("text")
         .attr("x", bx).attr("y", by)
         .attr("text-anchor", "middle")
         .attr("dominant-baseline", "central")
         .attr("fill", col(d).light)
-        .attr("font-size", "8px")
+        .attr("font-size", "24px")
         .attr("font-weight", 700)
         .attr("font-family", "'Barlow Condensed', sans-serif")
         .attr("letter-spacing", "0.8px")
