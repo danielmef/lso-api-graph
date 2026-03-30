@@ -183,8 +183,19 @@
      Update nodes_csv and links_csv whenever your
      data changes, then save and refresh.
   ───────────────────────────────────────────── */
+  // ── URL parameter support ──────────────────────────────────────────
+  // Use ?nodes=GID&links=GID in the browser URL to switch data sources
+  // Example: index.html?nodes=111111&links=222222
+  const BASE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBpMitJ2sH9Y6IIIrm8kd67ndx8E6gHXaM6c5SPvlzI7FE2baDQbYl692ucuTu6vkMHkjAZztKfWv3/pub?single=true&output=csv";
+  const DEFAULT_NODES_GID = "1365793813";
+  const DEFAULT_LINKS_GID = "1881293424";
+  const params     = new URLSearchParams(window.location.search);
+  const nodesGid   = params.get("nodes") || DEFAULT_NODES_GID;
+  const linksGid   = params.get("links") || DEFAULT_LINKS_GID;
+  const NODES_URL  = BASE_URL + "&gid=" + nodesGid;
+  const LINKS_URL  = BASE_URL + "&gid=" + linksGid;
+
   // Nodes fetched live from Google Sheets
-  const NODES_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBpMitJ2sH9Y6IIIrm8kd67ndx8E6gHXaM6c5SPvlzI7FE2baDQbYl692ucuTu6vkMHkjAZztKfWv3/pub?gid=1365793813&single=true&output=csv";
   let nodes_csv;
   try {
     const resp = await fetch(NODES_URL + "&t=" + Date.now());
@@ -218,7 +229,6 @@ transunion-sell,Transunion,company,sell,low,,,,yes`;
   }
 
   // Links fetched live from Google Sheets
-  const LINKS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBpMitJ2sH9Y6IIIrm8kd67ndx8E6gHXaM6c5SPvlzI7FE2baDQbYl692ucuTu6vkMHkjAZztKfWv3/pub?gid=1881293424&single=true&output=csv";
   let links_csv;
   try {
     const resp = await fetch(LINKS_URL + "&t=" + Date.now());
@@ -429,7 +439,7 @@ hub-buy,hub-sell`;
     .force("link", d3.forceLink(links).id(d => d.id)
       .distance(d => d._type === "hub" ? 300 : 200)
       .strength(0.7))
-    .force("charge", d3.forceManyBody().strength(-8000))
+    .force("charge", d3.forceManyBody().strength(-3500))
     .force("center", d3.forceCenter(W / 2, H / 2))
     .force("collide", d3.forceCollide().radius(d => radius(d) + 40).strength(1))
     .force("x", d3.forceX(d => d.group === "buy" ? W * 0.3 : W * 0.7).strength(0.18))
@@ -676,7 +686,7 @@ hub-buy,hub-sell`;
       const grp = d3.select(this);
       const r   = radius(d);
       const fs  = 12, lh = 14, pad = 8;
-      const bw  = 52, bh = lh * 2 + pad * 2;
+      const bw  = 46, bh = lh * 2 + pad * 2;
       // 4:30 position = 135deg clockwise from 12 = (sin135, -cos135) = (0.707, 0.707)
       // Top-left corner of badge just overlaps the circle edge
       const bx  = r * 0.65, by = r * 0.65;
