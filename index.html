@@ -675,29 +675,43 @@ hub-buy,hub-sell`;
     .each(function(d) {
       const grp = d3.select(this);
       const r   = radius(d);
-      const bw  = 50, bh = 28;
-      // Top-left corner of badge overlaps circle (bottom-right area of badge anchor)
-      const trx = -r * 0.62 - bw, bty = -r * 0.62;
+      const fs  = 12, lh = 14, pad = 4;
+      const bw  = 46, bh = lh * 2 + pad * 2;
+      // 4:30 position = 135deg clockwise from 12 = (sin135, -cos135) = (0.707, 0.707)
+      // Top-left corner of badge just overlaps the circle edge
+      const bx  = r * 0.65, by = r * 0.65;
       // Badge background
       grp.append("rect")
-        .attr("x", trx).attr("y", bty)
+        .attr("x", bx).attr("y", by)
         .attr("width", bw).attr("height", bh)
-        .attr("rx", 4).attr("ry", 4)
+        .attr("rx", 3).attr("ry", 3)
         .attr("fill", "#1a1a2e")
         .attr("stroke", col(d).light)
-        .attr("stroke-width", 2);
-      // Badge label
+        .attr("stroke-width", 1.5);
+      // Line 1: Solution
       grp.append("text")
-        .attr("x", trx + bw / 2).attr("y", bty + bh / 2)
+        .attr("x", bx + bw / 2).attr("y", by + pad + lh * 0.5)
         .attr("text-anchor", "middle")
         .attr("dominant-baseline", "central")
         .attr("fill", col(d).light)
-        .attr("font-size", "24px")
-        .attr("font-weight", 700)
-        .attr("font-family", "'Barlow Condensed', sans-serif")
-        .attr("letter-spacing", "0.8px")
+        .attr("font-size", fs + "px")
+        .attr("font-weight", 400)
+        .attr("font-family", "'DM Sans', sans-serif")
+        .attr("letter-spacing", "0.3px")
         .attr("pointer-events", "none")
-        .text("Solution Provider");
+        .text("Solution");
+      // Line 2: Provider
+      grp.append("text")
+        .attr("x", bx + bw / 2).attr("y", by + pad + lh * 1.5)
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "central")
+        .attr("fill", col(d).light)
+        .attr("font-size", fs + "px")
+        .attr("font-weight", 400)
+        .attr("font-family", "'DM Sans', sans-serif")
+        .attr("letter-spacing", "0.3px")
+        .attr("pointer-events", "none")
+        .text("Provider");
     });
 
   // Staggered fade-in
