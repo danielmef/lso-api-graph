@@ -134,7 +134,19 @@
     #api-dropdown-wrap {
       position: fixed; top: 22px; left: 50%; transform: translateX(-50%);
       z-index: 10;
+      display: flex; align-items: center; gap: 12px;
       opacity: 0; animation: slideDown .7s ease .6s forwards;
+    }
+    #lso-versions-img {
+      height: 36px; width: auto;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.15);
+    }
+    #lso-versions-img:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.4);
     }
     #api-select {
       background: rgba(10,18,40,0.85);
@@ -204,6 +216,8 @@
     <img src="https://www.mplify.net/wp-content/themes/base/images/logo.svg" alt="Mplify Alliance" />
   </div>
   <div id="api-dropdown-wrap">
+    <img id="lso-versions-img" src="https://danielmef.github.io/lso-graph/LSO_Versions_and_Releases.png"
+         alt="LSO Versions and Releases" title="LSO Versions and Releases" />
     <select id="api-select"><option>Loading APIs…</option></select>
   </div>
   <div id="debug-bar"></div>
