@@ -321,8 +321,8 @@ hub-buy,hub-sell`;
   // Reveal title and subtitle now that correct text is set
   titleEl.style.visibility    = "visible";
   subtitleEl.style.visibility = "visible";
-  // Sync hub link label with the final subtitle text
-  hubLinkLabel.text(subtitleEl.textContent);
+  // Store subtitle text so hubLinkLabel can pick it up once defined
+  window._subtitleText = subtitleEl.textContent;
 
   // Assign colors to groups
   const groups   = [...new Set(nodes.map(d => d.group))];
@@ -514,10 +514,10 @@ hub-buy,hub-sell`;
     .attr("letter-spacing", "0.4px")
     .attr("pointer-events", "none")
     .style("opacity", 0)
-    .text(document.getElementById("subtitle").textContent);
+    .text(window._subtitleText || "");
 
   // Reveal label once subtitle is set
-  setTimeout(() => hubLinkLabel.text(document.getElementById("subtitle").textContent).style("opacity", 1), 1200);
+  setTimeout(() => hubLinkLabel.text(window._subtitleText || "").style("opacity", 1), 800);
 
   /* ─────────────────────────────────────────────
      NODES
