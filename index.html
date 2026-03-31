@@ -165,8 +165,8 @@
 <body>
 
   <div id="header">
-    <div id="title">Interoperable LSO Partners - Illustration</div>
-    <div id="subtitle">LSO Address Validation API release 2 (lso.av.2)</div>
+    <div id="title" style="visibility:hidden">Interoperable LSO Partners - Illustration</div>
+    <div id="subtitle" style="visibility:hidden">LSO Address Validation API release 2 (lso.av.2)</div>
   </div>
 
   <div id="stats"></div>
@@ -309,13 +309,18 @@ hub-buy,hub-sell`;
   const links = d3.csvParse(links_csv);
 
   // Apply dynamic title if present in sheet
+  const titleEl    = document.getElementById("title");
+  const subtitleEl = document.getElementById("subtitle");
   if (metaTitle && metaTitle.label) {
-    document.getElementById("title").textContent = metaTitle.label.toUpperCase();
+    titleEl.textContent = metaTitle.label.toUpperCase();
   }
   // Apply dynamic subtitle if present in sheet
   if (metaSubtitle && metaSubtitle.label) {
-    document.getElementById("subtitle").textContent = metaSubtitle.label;
+    subtitleEl.textContent = metaSubtitle.label;
   }
+  // Reveal title and subtitle now that correct text is set
+  titleEl.style.visibility    = "visible";
+  subtitleEl.style.visibility = "visible";
 
   // Assign colors to groups
   const groups   = [...new Set(nodes.map(d => d.group))];
