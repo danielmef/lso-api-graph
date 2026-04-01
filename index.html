@@ -1178,12 +1178,14 @@ hub-buy,hub-sell`;
       msgEl.className = ""; msgEl.textContent = "Submitting…";
 
       try {
-        // Encode data as URL param — required for no-cors Apps Script calls
-        const payload = encodeURIComponent(JSON.stringify({ company, email, comments, selections, timestamp: new Date().toISOString() }));
-        await fetch(APPS_SCRIPT_URL + "?data=" + payload, {
-          method: "GET",
-          mode: "no-cors"
+        // POST JSON directly — CORS headers are set in Apps Script
+        const resp = await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ company, email, comments, selections, timestamp: new Date().toISOString() })
         });
+        const result = await resp.json();
+        if (result.status !== "success") throw new Error(result.message || "Unknown error");
         msgEl.className = "success";
         msgEl.textContent = "Thank you! Your implementation has been recorded.";
         submitBtn.disabled = false;
