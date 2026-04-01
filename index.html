@@ -1108,7 +1108,7 @@ hub-buy,hub-sell`;
   // ── Implementation Survey ────────────────────────────────────────────────
   (function() {
     // REPLACE THIS with your deployed Google Apps Script Web App URL
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyk3_7fvEz4pRCbtbeWZExkkJ_FDhABY_URayVLsDN2g6Hb3SI3Xpp4IdGCY2_xwMHz/exec";
+    const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_URL_HERE";
 
     // LSO API list with versions (from LSO Versions & Releases table)
     const apis = [
@@ -1178,11 +1178,11 @@ hub-buy,hub-sell`;
       msgEl.className = ""; msgEl.textContent = "Submitting…";
 
       try {
-        await fetch(APPS_SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ company, email, comments, selections, timestamp: new Date().toISOString() })
+        // Encode data as URL param — required for no-cors Apps Script calls
+        const payload = encodeURIComponent(JSON.stringify({ company, email, comments, selections, timestamp: new Date().toISOString() }));
+        await fetch(APPS_SCRIPT_URL + "?data=" + payload, {
+          method: "GET",
+          mode: "no-cors"
         });
         msgEl.className = "success";
         msgEl.textContent = "Thank you! Your implementation has been recorded.";
